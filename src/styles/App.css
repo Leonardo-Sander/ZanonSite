@@ -999,3 +999,20 @@ body {
   gap: 0.5rem;
 }
 
+.feedback-message {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.feedback-message.success {
+  background-color: #d1fae5; /* Verde claro */
+  color: #065f46; /* Verde escuro */
+}
+
+.feedback-message.error {
+  background-color: #fee2e2; /* Vermelho claro */
+  color: #991b1b; /* Vermelho escuro */
+}

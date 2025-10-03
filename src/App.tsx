@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
-import { Menu, X, Home, Info, Wrench, Camera, Phone, MapPin, Mail, MessageCircle, Star, Check, ArrowRight } from 'lucide-react';
-import './styles/App.css'; // Import CSS file
+import React, { useState, useRef } from 'react';
+import emailjs from 'emailjs-com'; // 1. IMPORTS ADICIONADOS
+import BeforeAfterSlider from 'react-before-after-slider-component';
+import 'react-before-after-slider-component/dist/build.css';
+
+import { Menu, X, Home, Wrench, Camera, Phone, MapPin, Mail, MessageCircle, Star, Check, ArrowRight } from 'lucide-react';
+import './styles/App.css';
 
 interface Service {
   icon: React.ReactNode;
@@ -20,6 +24,38 @@ const ZanonRenovationSite: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
+  const form = useRef<HTMLFormElement>(null);
+  const [formStatus, setFormStatus] = useState<string>('Send Message');
+  const [feedback, setFeedback] = useState({ type: '', message: '' }); // <-- ADICIONE ESTA LINHA
+
+
+  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormStatus('Sending...');
+    setFeedback({ type: '', message: '' });
+
+    if (form.current) {
+      // ▼▼▼ PREENCHA SUAS 3 CHAVES DO EMAILJS AQUI ▼▼▼
+      emailjs.sendForm(
+        'service_uktjwuh',    // Cole o Service ID aqui
+        'template_8c8ku4y',   // Cole o Template ID aqui
+        form.current,
+        'WaXPXqeWtGrYwPTV4'        // Cole o User ID (Public Key) aqui
+      )
+      .then((result) => {
+          console.log(result.text);
+          setFeedback({ type: 'success', message: 'Message sent successfully! We will contact you soon.' }); // <-- SUBSTITUI O ALERT DE SUCESSO
+          setFormStatus('Send Message');
+          form.current?.reset();
+      }, (error) => {
+          console.log(error.text);
+          setFeedback({ type: 'error', message: 'An error occurred, please try again later.' }); // <-- SUBSTITUI O ALERT DE ERRO
+          setFormStatus('Send Message');
+      });
+    }
+  };
+
+
   const scrollToSection = (sectionId: string): void => {
     setActiveSection(sectionId);
     setMobileMenuOpen(false);
@@ -29,40 +65,40 @@ const ZanonRenovationSite: React.FC = () => {
     }
   };
 
-  const whatsappNumber: string = "+1234567890";
+  const whatsappNumber: string = "+14752571037";
   const whatsappMessage: string = "Hello! I would like to request a quote for renovation/remodeling.";
   const whatsappUrl: string = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
-  const services: Service[] = [
+   const services: Service[] = [
     {
-      icon: <Home className="icon-lg" />,
+      icon: <Wrench className="w-8 h-8" />,
+      title: "Custom Carpentry",
+      description: "Expert woodworking, cabinets, built-ins, and custom furniture"
+    },
+    {
+      icon: <Home className="w-8 h-8" />,
+      title: "Kitchen Cabinets",
+      description: "Custom kitchen cabinetry design and installation"
+    },
+    {
+      icon: <MapPin className="w-8 h-8" />,
+      title: "Built-in Storage",
+      description: "Custom closets, shelving, and storage solutions"
+    },
+    {
+      icon: <Check className="w-8 h-8" />,
+      title: "Floors and Trim",
+      description: "Hardwood flooring, baseboards, and finish carpentry"
+    },
+    {
+      icon: <Star className="w-8 h-8" />,
       title: "Complete Renovation",
-      description: "Full transformation of homes and commercial establishments"
+      description: "Full home remodeling with carpentry focus"
     },
     {
-      icon: <Wrench className="icon-lg" />,
-      title: "Kitchen Remodeling",
-      description: "Complete modernization with functional and elegant design"
-    },
-    {
-      icon: <MapPin className="icon-lg" />,
-      title: "Bathroom Renovation",
-      description: "Full renovation with top-quality materials"
-    },
-    {
-      icon: <Check className="icon-lg" />,
-      title: "Floors and Coatings",
-      description: "Installation and renovation of floors, tiles, and coatings"
-    },
-    {
-      icon: <Star className="icon-lg" />,
-      title: "Professional Painting",
-      description: "Interior and exterior painting with flawless finish"
-    },
-    {
-      icon: <Camera className="icon-lg" />,
+      icon: <Camera className="w-8 h-8" />,
       title: "Consulting and Design",
-      description: "Planning and personalized design for your project"
+      description: "Custom carpentry planning and design services"
     }
   ];
 
@@ -71,43 +107,43 @@ const ZanonRenovationSite: React.FC = () => {
       title: "Modern Kitchen",
       before: "Old kitchen with worn-out furniture",
       after: "Modern kitchen with central island and premium finishes",
-      beforeImage: "../public/images/cozinha_antes.png",
-      afterImage: "../public/images/cozinha_depois.png"
+      beforeImage: "images/cozinha_antes.png",
+      afterImage: "images/cozinha_depois.png"
     },
     {
       title: "Luxury Bathroom",
       before: "Bathroom with outdated tiles",
       after: "Spa bathroom with marble and sophisticated finishes",
-      beforeImage: "../public/images/banheiro_antes.png",
-      afterImage: "../public/images/banheiro_depois.png"
+      beforeImage: "images/banheiro_antes.png",
+      afterImage: "images/banheiro_depois.png"
     },
     {
       title: "Living Room",
       before: "Outdated and dark environment",
       after: "Spacious, bright, and contemporary space",
-      beforeImage: "../public/images/sala_antes.png",
-      afterImage: "../public/images/sala_depois.png" 
+      beforeImage: "images/sala_antes.png",
+      afterImage: "images/sala_depois.png" 
     },
     {
       title: "Office Space",
       before: "Traditional corporate environment",
       after: "Modern and productive workspace",
-      beforeImage: "../public/images/escritorio_antes.png",
-      afterImage: "../public/images/escritorio_depois.png"
+      beforeImage: "images/escritorio_antes.png",
+      afterImage: "images/escritorio_depois.png"
     },
     {
       title: "Master Bedroom",
       before: "Bedroom with inadequate layout",
       after: "Master suite with integrated closet",
-      beforeImage: "../public/images/quarto_antes.png",
-      afterImage: "../public/images/quarto_depois.png"
+      beforeImage: "images/quarto_antes.png",
+      afterImage: "images/quarto_depois.png"
     },
     {
       title: "Outdoor Area",
       before: "Backyard without use",
       after: "Cozy and complete leisure area",
-      beforeImage: "../public/images/are_antes.png",
-      afterImage: "../public/images/area_depois.png"
+      beforeImage: "images/are_antes.png",
+      afterImage: "images/area_depois.png"
     }
   ];
 
@@ -167,11 +203,11 @@ const ZanonRenovationSite: React.FC = () => {
         <div className="hero-container">
           <div className="text-center">
             <h1 className="hero-title">
-              Transforming <span className="hero-title-accent">Spaces</span>
-              <br />with Quality
+              Expert <span className="hero-title-accent">Carpentry</span>
+              <br />& General Renovation
             </h1>
             <p className="hero-subtitle">
-              Specialists in residential and commercial renovations. Experience, reliability, and exceptional results.
+               Specialized in custom carpentry and complete renovations. Fully insured & licensed professionals delivering exceptional craftsmanship.
             </p>
             <div className="hero-buttons">
               <button onClick={() => scrollToSection('contact')} className="cta-button">
@@ -224,13 +260,12 @@ const ZanonRenovationSite: React.FC = () => {
           About <span className="section-title-accent">Zanon Renovation</span>
         </h2>
         <p className="about-text">
-          With years of experience in the renovation and remodeling market, Zanon General Renovation LLC
-          has established itself as a reference in quality and reliability in space transformation.
+          With years of specialized experience in carpentry and general renovation, Zanon General Renovation LLC 
+          has established itself as a reference in custom woodwork and quality construction services.
         </p>
         <p className="about-text-small">
-          Our mission is to turn dreams into reality, offering complete solutions for residential
-          and commercial renovations. We work with qualified professionals, top-quality materials,
-          and always respecting deadlines and budgets.
+         Our mission is to bring your vision to life through expert craftsmanship. We specialize in custom carpentry while offering complete renovation solutions.
+         Fully licensed and insured, we work with qualified professionals, premium materials, and always respect deadlines and budgets.
         </p>
         <div className="stats-grid">
           <div className="stat-item">
@@ -250,15 +285,15 @@ const ZanonRenovationSite: React.FC = () => {
           <ul className="feature-list">
             <li className="feature-item">
               <Check className="icon-sm check-icon" />
-              <span>Experienced and certified professionals</span>
+              <span>Specialized carpentry expertise</span>
             </li>
             <li className="feature-item">
               <Check className="icon-sm check-icon" />
-              <span>High-quality materials</span>
+              <span>Fully licensed and insured</span>
             </li>
             <li className="feature-item">
               <Check className="icon-sm check-icon" />
-              <span>Strictly respected deadlines</span>
+              <span>Premium materials and craftsmanship</span>
             </li>
             <li className="feature-item">
               <Check className="icon-sm check-icon" />
@@ -388,54 +423,33 @@ const ZanonRenovationSite: React.FC = () => {
 
     <div className="contact-grid">
       {/* Contact Form */}
-      <div className="contact-form">
-        <h3 className="form-title">Request a Quote</h3>
-        <div>
-          <div className="form-group">
-            <label className="form-label">
-              Full Name
-            </label>
-            <input 
-              type="text" 
-              className="form-input"
-              placeholder="Your full name"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">
-              Email
-            </label>
-            <input 
-              type="email" 
-              className="form-input"
-              placeholder="your@email.com"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">
-              Phone
-            </label>
-            <input 
-              type="tel" 
-              className="form-input"
-              placeholder="(000) 000-0000"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">
-              Message
-            </label>
-            <textarea 
-              rows={4}
-              className="form-textarea"
-              placeholder="Describe your project..."
-            />
-          </div>
-          <button className="form-button">
-            Send Message
-          </button>
-        </div>
-      </div>
+      {/* COLE ESTE CÓDIGO NOVO NO LUGAR */}
+<div className="contact-form">
+  <h3 className="form-title">Request a Quote</h3>
+  <form ref={form} onSubmit={sendEmail}>
+    <div className="form-group">
+      <label htmlFor="fullName" className="form-label">Full Name</label>
+      <input type="text" id="fullName" name="fullName" className="form-input" placeholder="Your full name" required />
+    </div>
+    <div className="form-group">
+      <label htmlFor="email" className="form-label">Email</label>
+      <input type="email" id="email" name="email" className="form-input" placeholder="your@email.com" required />
+    </div>
+    <div className="form-group">
+      <label htmlFor="phone" className="form-label">Phone</label>
+      <input type="tel" id="phone" name="phone" className="form-input" placeholder="(000) 000-0000" />
+    </div>
+    <div className="form-group">
+      <label htmlFor="message" className="form-label">Message</label>
+      <textarea id="message" name="message" rows={4} className="form-textarea" placeholder="Describe your project..." required />
+    </div>
+    <button type="submit" className="form-button">
+      {formStatus}
+    </button>
+  </form>
+  {feedback.message && <p className={`feedback-message ${feedback.type}`}>{feedback.message}</p>}
+  
+</div>
 
       {/* Contact Info */}
       <div className="contact-info">
@@ -448,7 +462,7 @@ const ZanonRenovationSite: React.FC = () => {
               </div>
               <div>
                 <h4 className="contact-item-title">Phone</h4>
-                <p className="contact-item-text">(000) 000-0000</p>
+                <p className="contact-item-text">(475) 257-1037</p>
               </div>
             </div>
             <div className="contact-item">
@@ -457,7 +471,7 @@ const ZanonRenovationSite: React.FC = () => {
               </div>
               <div>
                 <h4 className="contact-item-title">Email</h4>
-                <p className="contact-item-text">contact@zanonrenovation.com</p>
+                <p className="contact-item-text">zanongeneralrenovationllc@gmail.com</p>
               </div>
             </div>
             <div className="contact-item">
@@ -515,12 +529,13 @@ const ZanonRenovationSite: React.FC = () => {
           Zanon <span className="logo-accent">Renovation</span>
         </div>
         <p className="footer-description">
-          Transforming spaces with quality, reliability, and excellence for over 15 years.
+          Expert carpentry and general renovation services. Fully licensed, insured, and committed to quality craftsmanship.
         </p>
       </div>
       <div>
         <h4 className="footer-section-title">Services</h4>
         <ul className="footer-list">
+          <li>Custom Carpentry</li>
           <li>Complete Renovation</li>
           <li>Kitchen Remodeling</li>
           <li>Bathroom Remodeling</li>
