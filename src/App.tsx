@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import emailjs from 'emailjs-com'; // 1. IMPORTS ADICIONADOS
-import BeforeAfterSlider from 'react-before-after-slider-component';
+//  import BeforeAfterSlider from 'react-before-after-slider-component';
 import 'react-before-after-slider-component/dist/build.css';
 
 import { Menu, X, Home, Wrench, Camera, Phone, MapPin, Mail, MessageCircle, Star, Check, ArrowRight } from 'lucide-react';
@@ -21,7 +21,7 @@ interface Project {
 }
 
 const ZanonRenovationSite: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<string>('home');
+  // const [activeSection, setActiveSection] = useState<string>('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   const form = useRef<HTMLFormElement>(null);
@@ -57,7 +57,7 @@ const ZanonRenovationSite: React.FC = () => {
 
 
   const scrollToSection = (sectionId: string): void => {
-    setActiveSection(sectionId);
+    setMobileMenuOpen(false);
     setMobileMenuOpen(false);
     const element = document.getElementById(sectionId);
     if (element) {
